@@ -2,35 +2,165 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bíblia Sagrada | Cine-Experiência</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        :root { --gold: #d4af37; --bg: #050505; --card: #111; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; }
-        nav { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid #222; }
-        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.5rem; text-decoration: none; font-weight: bold; }
-        .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; background: linear-gradient(rgba(0,0,0,0.8), #050505), url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&q=80&w=1600') center/cover; }
-        .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 8vw, 4.5rem); color: var(--gold); }
-        .btn-premium { background: var(--gold); color: #000; padding: 18px 45px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 30px; text-transform: uppercase; }
-        .footer { padding: 60px; text-align: center; border-top: 1px solid #222; color: #444; }
+        :root { --gold: #d4af37; --bg: #050505; --card: #121212; --white: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; }
+        
+        /* Navegação Profissional */
+        nav { 
+            padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.95); border-bottom: 1px solid #222; position: fixed; width: 100%; z-index: 1000;
+        }
+        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.4rem; font-weight: 900; text-decoration: none; letter-spacing: 2px; }
+        
+        .auth-nav { display: flex; gap: 15px; }
+        .btn-outline { border: 1px solid var(--gold); color: var(--gold); background: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn-outline:hover { background: var(--gold); color: #000; }
+
+        /* Login Modal / Seção */
+        #authOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center;
+        }
+        .auth-card {
+            background: #111; padding: 40px; border-radius: 15px; border: 1px solid var(--gold);
+            width: 100%; max-width: 400px; text-align: center;
+        }
+        .auth-card h2 { font-family: 'Cinzel', serif; color: var(--gold); margin-bottom: 20px; }
+        .auth-card input { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 5px; }
+        .auth-card button { width: 100%; padding: 12px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
+
+        /* Hero e Conteúdo */
+        .hero { 
+            height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.7), var(--bg)), url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=1600') center/cover;
+            padding: 0 10%;
+        }
+        .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 8vw, 5rem); color: var(--gold); margin-bottom: 20px; }
+        
+        /* Biblioteca (Só aparece logado) */
+        #membersArea { display: none; padding: 5rem 5%; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-top: 30px; }
+        .video-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; transition: 0.4s; cursor: pointer; }
+        .video-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .thumb { width:100%; height: 200px; position: relative; background-size: cover; display: flex; align-items: center; justify-content: center; }
+        .play-icon { font-size: 3rem; color: var(--gold); opacity: 0.8; }
+
+        footer { padding: 4rem; text-align: center; border-top: 1px solid #222; color: #444; font-size: 0.8rem; }
     </style>
 </head>
 <body>
+
     <nav>
         <a href="#" class="logo">BÍBLIA SAGRADA</a>
-        <div style="color:var(--gold); border: 1px solid var(--gold); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">gabrielafelix3960-ops</div>
+        <div class="auth-nav" id="navActions">
+            <button class="btn-outline" onclick="toggleAuth('login')">Entrar</button>
+            <button class="btn-outline" style="background:var(--gold); color:black;" onclick="toggleAuth('signup')">Cadastrar</button>
+        </div>
+        <div id="userInfo" style="display:none; color: var(--gold); font-weight: bold;">
+            Olá, <span id="displayUser"></span> | <a href="#" onclick="logout()" style="color:white; font-size:0.7rem;">Sair</a>
+        </div>
     </nav>
-    <header class="hero">
-        <p style="color: var(--gold); letter-spacing: 5px; font-weight: bold;">CINE-EXPERIÊNCIA</p>
-        <h1>GÊNESIS</h1>
-        <p style="max-width: 650px; color: #ccc; margin-top: 20px; font-size: 1.2rem;">Uma jornada imersiva pelas escrituras em 4K.</p>
-        <button class="btn-premium" onclick="alert('Redirecionando para pagamento seguro...')">Acesso Premium</button>
-    </header>
-    <footer class="footer">Estúdio: gabrielafelix3960-ops</footer>
+
+    <!-- Home Principal (Pública) -->
+    <section class="hero" id="publicHero">
+        <span style="color:var(--gold); letter-spacing: 4px; font-weight: bold;">CINE-EXPERIÊNCIA BÍBLICA</span>
+        <h1>A PALAVRA EM IMAGENS</h1>
+        <p style="max-width: 600px; margin: 20px 0; color: #ccc;">Assista às histórias da Bíblia contadas em formato cinematográfico. Cadastre-se gratuitamente para começar sua jornada.</p>
+        <button class="btn-outline" style="background:var(--gold); color:black; padding: 15px 40px;" onclick="toggleAuth('signup')">COMEÇAR AGORA</button>
+    </section>
+
+    <!-- Área de Membros (Privada) -->
+    <main id="membersArea">
+        <h2 style="font-family:'Cinzel'; color:var(--gold); border-left: 4px solid var(--gold); padding-left: 20px;">Sua Biblioteca</h2>
+        <div class="video-grid">
+            <div class="video-card" onclick="alert('Iniciando Gênesis: A Criação (2D/4K)...')">
+                <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1464802686167-b939a67e0b24?q=80&w=400')">
+                    <div class="play-icon">▶</div>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-family:'Cinzel';">Gênesis: A Criação</h3>
+                    <p style="color:#777; font-size: 0.9rem; margin-top: 10px;">Uma jornada épica de 20 minutos pelo início de tudo.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Autenticação -->
+    <div id="authOverlay">
+        <div class="auth-card">
+            <h2 id="authTitle">Criar Conta</h2>
+            <input type="text" id="authName" placeholder="Seu Nome">
+            <input type="email" id="authEmail" placeholder="Seu E-mail">
+            <input type="password" id="authPass" placeholder="Sua Senha">
+            <button onclick="handleAuth()" id="authBtn">Cadastrar</button>
+            <p style="margin-top: 20px; font-size: 0.8rem; color: #666; cursor: pointer;" onclick="switchAuth()">Já tem conta? Entrar</p>
+            <p onclick="document.getElementById('authOverlay').style.display='none'" style="margin-top:10px; cursor:pointer; font-size:0.7rem;">Fechar</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Bíblia Sagrada Digital • Experiência Imersiva Cinema</p>
+    </footer>
+
     <script>
-        // CHAVE PÚBLICA - PERMITIDA PELO GITHUB
-        const stripe = Stripe('pk_live_51SfbYaKg8IkUwtXhLZUoMJFVd6Xz3KpqImhFDORR3d0hpbiAeZrXfY4ZLFT7yq3kttY7UvqXe6N26vQhtOoDyyiT00Jqhuy6YC');
+        let isLogin = false;
+
+        function toggleAuth(type) {
+            document.getElementById('authOverlay').style.display = 'flex';
+            isLogin = (type === 'login');
+            updateAuthUI();
+        }
+
+        function switchAuth() {
+            isLogin = !isLogin;
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            document.getElementById('authTitle').innerText = isLogin ? "Entrar" : "Criar Conta";
+            document.getElementById('authBtn').innerText = isLogin ? "Acessar" : "Cadastrar";
+            document.getElementById('authName').style.display = isLogin ? "none" : "block";
+        }
+
+        function handleAuth() {
+            const name = document.getElementById('authName').value;
+            const email = document.getElementById('authEmail').value;
+            
+            if (!email) return alert("Por favor, preencha o e-mail.");
+            
+            // Simulação de salvamento/login
+            localStorage.setItem('user_biblia', email);
+            localStorage.setItem('user_name', name || email.split('@')[0]);
+            
+            checkStatus();
+            document.getElementById('authOverlay').style.display = 'none';
+        }
+
+        function checkStatus() {
+            const user = localStorage.getItem('user_biblia');
+            if (user) {
+                document.getElementById('publicHero').style.display = 'none';
+                document.getElementById('membersArea').style.display = 'block';
+                document.getElementById('navActions').style.display = 'none';
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('displayUser').innerText = localStorage.getItem('user_name');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user_biblia');
+            localStorage.removeItem('user_name');
+            location.reload();
+        }
+
+        // Tenta o login automático se já tiver salvo
+        checkStatus();
     </script>
 </body>
 </html>
