@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,8 +32,8 @@
             width: 100%; max-width: 400px; text-align: center;
         }
         .auth-card h2 { font-family: 'Cinzel', serif; color: var(--gold); margin-bottom: 20px; }
-        .auth-card input { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 5px; }
-        .auth-card button { width: 100%; padding: 12px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        .auth-card input { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 5px; font-size: 1rem; }
+        .auth-card button { width: 100%; padding: 12px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 1rem; }
 
         /* Hero e Conteúdo */
         .hero { 
@@ -43,12 +43,12 @@
         }
         .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 8vw, 5rem); color: var(--gold); margin-bottom: 20px; }
         
-        /* Biblioteca (Só aparece logado) */
-        #membersArea { display: none; padding: 5rem 5%; }
+        /* Biblioteca (Só aparece com conta ativa) */
+        #membersArea { display: none; padding: 7rem 5% 5rem 5%; }
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-top: 30px; }
         .video-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; transition: 0.4s; cursor: pointer; }
         .video-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .thumb { width:100%; height: 200px; position: relative; background-size: cover; display: flex; align-items: center; justify-content: center; }
+        .thumb { width:100%; height: 200px; position: relative; background-size: cover; display: flex; align-items: center; justify-content: center; background-position: center; }
         .play-icon { font-size: 3rem; color: var(--gold); opacity: 0.8; }
 
         footer { padding: 4rem; text-align: center; border-top: 1px solid #222; color: #444; font-size: 0.8rem; }
@@ -60,31 +60,33 @@
         <a href="#" class="logo">BÍBLIA SAGRADA</a>
         <div class="auth-nav" id="navActions">
             <button class="btn-outline" onclick="toggleAuth('login')">Entrar</button>
-            <button class="btn-outline" style="background:var(--gold); color:black;" onclick="toggleAuth('signup')">Cadastrar</button>
+            <button class="btn-outline" style="background:var(--gold); color:black;" onclick="toggleAuth('signup')">Criar Conta</button>
         </div>
         <div id="userInfo" style="display:none; color: var(--gold); font-weight: bold;">
-            Olá, <span id="displayUser"></span> | <a href="#" onclick="logout()" style="color:white; font-size:0.7rem;">Sair</a>
+            Olá, <span id="displayUser"></span> | <a href="#" onclick="logout()" style="color:white; font-size:0.7rem; margin-left:10px; text-decoration:none; border:1px solid #333; padding:2px 8px; border-radius:3px;">Sair</a>
         </div>
     </nav>
 
     <!-- Home Principal (Pública) -->
     <section class="hero" id="publicHero">
-        <span style="color:var(--gold); letter-spacing: 4px; font-weight: bold;">CINE-EXPERIÊNCIA BÍBLICA</span>
+        <span style="color:var(--gold); letter-spacing: 4px; font-weight: bold; text-transform: uppercase;">Cine-Experiência Bíblica</span>
         <h1>A PALAVRA EM IMAGENS</h1>
-        <p style="max-width: 600px; margin: 20px 0; color: #ccc;">Assista às histórias da Bíblia contadas em formato cinematográfico. Cadastre-se gratuitamente para começar sua jornada.</p>
-        <button class="btn-outline" style="background:var(--gold); color:black; padding: 15px 40px;" onclick="toggleAuth('signup')">COMEÇAR AGORA</button>
+        <p style="max-width: 650px; margin: 20px 0; color: #ccc; line-height: 1.6;">Assista às histórias da Bíblia contadas em formato cinematográfico com resolução épica. Crie a sua conta para iniciar esta jornada.</p>
+        <button class="btn-outline" style="background:var(--gold); color:black; padding: 18px 45px; font-weight: 900;" onclick="toggleAuth('signup')">CRIAR CONTA AGORA</button>
     </section>
 
     <!-- Área de Membros (Privada) -->
     <main id="membersArea">
-        <h2 style="font-family:'Cinzel'; color:var(--gold); border-left: 4px solid var(--gold); padding-left: 20px;">Sua Biblioteca</h2>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+            <h2 style="font-family:'Cinzel', serif; color:var(--gold); border-left: 4px solid var(--gold); padding-left: 20px;">Biblioteca de Filmes</h2>
+        </div>
         <div class="video-grid">
-            <div class="video-card" onclick="alert('Iniciando Gênesis: A Criação (2D/4K)...')">
+            <div class="video-card" onclick="alert('Iniciando Gênesis: A Criação. Prepare a sua cine-experiência...')">
                 <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1464802686167-b939a67e0b24?q=80&w=400')">
                     <div class="play-icon">▶</div>
                 </div>
                 <div style="padding: 1.5rem;">
-                    <h3 style="font-family:'Cinzel';">Gênesis: A Criação</h3>
+                    <h3 style="font-family:'Cinzel', serif;">Gênesis: A Criação</h3>
                     <p style="color:#777; font-size: 0.9rem; margin-top: 10px;">Uma jornada épica de 20 minutos pelo início de tudo.</p>
                 </div>
             </div>
@@ -95,17 +97,21 @@
     <div id="authOverlay">
         <div class="auth-card">
             <h2 id="authTitle">Criar Conta</h2>
-            <input type="text" id="authName" placeholder="Seu Nome">
-            <input type="email" id="authEmail" placeholder="Seu E-mail">
-            <input type="password" id="authPass" placeholder="Sua Senha">
-            <button onclick="handleAuth()" id="authBtn">Cadastrar</button>
-            <p style="margin-top: 20px; font-size: 0.8rem; color: #666; cursor: pointer;" onclick="switchAuth()">Já tem conta? Entrar</p>
-            <p onclick="document.getElementById('authOverlay').style.display='none'" style="margin-top:10px; cursor:pointer; font-size:0.7rem;">Fechar</p>
+            <div style="margin-bottom: 20px; color: #888; font-size: 0.9rem;" id="authDesc">Preencha os dados para aceder à biblioteca.</div>
+            <input type="text" id="authName" placeholder="Nome Próprio">
+            <input type="email" id="authEmail" placeholder="E-mail">
+            <input type="password" id="authPass" placeholder="Palavra-passe">
+            <button onclick="handleAuth()" id="authBtn">CRIAR CONTA</button>
+            <p style="margin-top: 25px; font-size: 0.9rem; color: #888;">
+                <span id="switchText">Já possui uma conta?</span> 
+                <span onclick="switchAuth()" style="color: var(--gold); cursor: pointer; font-weight: bold; text-decoration: underline;">Clique aqui</span>
+            </p>
+            <p onclick="document.getElementById('authOverlay').style.display='none'" style="margin-top:20px; cursor:pointer; font-size:0.75rem; color: #555;">Cancelar</p>
         </div>
     </div>
 
     <footer>
-        <p>© 2024 Bíblia Sagrada Digital • Experiência Imersiva Cinema</p>
+        <p>© 2024 Bíblia Sagrada Digital • Produção Cinematográfica Imersiva</p>
     </footer>
 
     <script>
@@ -123,20 +129,23 @@
         }
 
         function updateAuthUI() {
-            document.getElementById('authTitle').innerText = isLogin ? "Entrar" : "Criar Conta";
-            document.getElementById('authBtn').innerText = isLogin ? "Acessar" : "Cadastrar";
+            document.getElementById('authTitle').innerText = isLogin ? "Aceder" : "Criar Conta";
+            document.getElementById('authBtn').innerText = isLogin ? "ENTRAR" : "CRIAR CONTA";
+            document.getElementById('authDesc').innerText = isLogin ? "Introduza os seus dados de acesso." : "Preencha os dados para aceder à biblioteca.";
             document.getElementById('authName').style.display = isLogin ? "none" : "block";
+            document.getElementById('switchText').innerText = isLogin ? "Ainda não tem conta?" : "Já possui uma conta?";
         }
 
         function handleAuth() {
-            const name = document.getElementById('authName').value;
+            const nameField = document.getElementById('authName');
             const email = document.getElementById('authEmail').value;
+            const name = nameField.value;
             
-            if (!email) return alert("Por favor, preencha o e-mail.");
+            if (!email) return alert("Por favor, introduza um e-mail válido.");
             
-            // Simulação de salvamento/login
+            // Gravação local (Simulação de Base de Dados no Navegador)
             localStorage.setItem('user_biblia', email);
-            localStorage.setItem('user_name', name || email.split('@')[0]);
+            localStorage.setItem('user_name', isLogin ? (localStorage.getItem('user_name') || email.split('@')[0]) : name);
             
             checkStatus();
             document.getElementById('authOverlay').style.display = 'none';
@@ -159,7 +168,6 @@
             location.reload();
         }
 
-        // Tenta o login automático se já tiver salvo
         checkStatus();
     </script>
 </body>
