@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bíblia Sagrada | Cine-Experiência</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root { --gold: #d4af37; --bg: #050505; --card: #111; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; }
+        nav { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: #000; border-bottom: 1px solid #222; }
+        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.5rem; text-decoration: none; font-weight: bold; }
+        .hero { 
+            height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%;
+            background: linear-gradient(rgba(0,0,0,0.8), #050505), url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&q=80&w=1600') center/cover;
+        }
+        .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 8vw, 4.5rem); color: var(--gold); margin: 0; }
+        .btn-premium { background: var(--gold); color: #000; padding: 18px 45px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 30px; transition: 0.3s; text-transform: uppercase; }
+        .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212,175,55,0.4); }
+        .container { padding: 60px 5%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; transition: 0.4s; }
+        .card:hover { border-color: var(--gold); }
+        .footer { padding: 60px; text-align: center; border-top: 1px solid #222; color: #444; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">BÍBLIA SAGRADA</a>
+        <div style="color:var(--gold); border: 1px solid var(--gold); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+            gabrielafelix3960-ops
+        </div>
+    </nav>
+
+    <header class="hero">
+        <p style="color: var(--gold); letter-spacing: 5px; font-weight: bold;">EXPERIÊNCIA CINEMATOGRÁFICA</p>
+        <h1>GÊNESIS</h1>
+        <p style="max-width: 650px; color: #ccc; margin-top: 20px; font-size: 1.2rem;">Sinta a criação do mundo através de um filme épico com narração profissional e resolução 4K. Uma jornada imersiva pelas escrituras.</p>
+        <button class="btn-premium" onclick="openCheckout()">Desbloquear Biblioteca Premium</button>
+    </header>
+
+    <main class="container">
+        <h2 style="font-family: 'Cinzel'; color: var(--gold); margin-bottom: 30px;">Filmes Disponíveis</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1464802686167-b939a67e0b24?q=80&w=400">
+                <div style="padding: 20px;">
+                    <h3 style="font-family: 'Cinzel';">A Criação (20 min)</h3>
+                    <p style="color: #666; font-size: 0.9rem; margin: 10px 0;">O relato fiel de Gênesis 1 e 2 em formato de superprodução.</p>
+                    <button class="btn-premium" style="padding: 10px 20px; font-size: 0.8rem; margin-top: 10px;" onclick="alert('Vídeo carregando...')">ASSISTIR</button>
+                </div>
+            </div>
+            <div class="card" style="opacity: 0.5;">
+                <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=400">
+                <div style="padding: 20px;">
+                    <h3 style="font-family: 'Cinzel'; text-decoration: line-through;">O Êxodo</h3>
+                    <p style="color: #666; font-size: 0.9rem; margin: 10px 0;">Em fase de produção cinematográfica.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Desenvolvido por: gabrielafelix3960-ops</p>
+        <p>Pagamentos via Stripe (pk_live_51SfbYaKg8IkUwtXh...)</p>
+    </footer>
+
+    <script>
+        // Inicialização do Stripe com sua chave pública live
+        const stripe = Stripe('pk_live_51SfbYaKg8IkUwtXhLZUoMJFVd6Xz3KpqImhFDORR3d0hpbiAeZrXfY4ZLFT7yq3kttY7UvqXe6N26vQhtOoDyyiT00Jqhuy6YC');
+
+        function openCheckout() {
+            console.log("Fluxo de pagamento iniciado...");
+            alert("A redirecionar para o check-out seguro da Stripe...");
+            // Substitua por window.location.href = "seu_link_de_pagamento_stripe"
+        }
+    </script>
+</body>
+</html>
