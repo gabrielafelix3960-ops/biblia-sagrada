@@ -3,188 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bíblia Sagrada | Área de Membros</title>
+    <title>Bíblia Sagrada | Cine-Estúdio</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root { --gold: #d4af37; --bg: #050505; --card: #121212; --white: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--white); }
         
-        /* Navegação */
-        nav { 
-            padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.95); border-bottom: 1px solid #222; position: fixed; width: 100%; z-index: 1000;
-        }
-        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.4rem; font-weight: 900; text-decoration: none; letter-spacing: 2px; }
-        .btn-outline { border: 1px solid var(--gold); color: var(--gold); background: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .btn-outline:hover { background: var(--gold); color: #000; }
-
+        nav { padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.95); border-bottom: 1px solid #222; position: fixed; width: 100%; z-index: 1000; }
+        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.4rem; font-weight: 900; text-decoration: none; }
+        
         /* Modais */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; padding: 20px;
-        }
-        .modal-content {
-            background: #111; padding: 40px; border-radius: 15px; border: 1px solid var(--gold);
-            width: 100%; max-width: 450px; text-align: center; position: relative;
-        }
-        .close-modal { position: absolute; top: 15px; right: 20px; cursor: pointer; color: #666; font-size: 1.5rem; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #111; padding: 40px; border-radius: 15px; border: 1px solid var(--gold); width: 100%; max-width: 500px; text-align: center; }
 
-        /* Estilo Paywall */
-        .paywall-icon { font-size: 4rem; color: var(--gold); margin-bottom: 20px; }
-        .premium-tag { background: var(--gold); color: black; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+        /* Paywall */
+        .price-option { background: #1a1a1a; padding: 20px; border: 1px solid #333; border-radius: 10px; margin: 15px 0; cursor: pointer; transition: 0.3s; text-align: left; position: relative; }
+        .price-option:hover { border-color: var(--gold); background: #222; }
+        .price-option h4 { color: var(--gold); margin-bottom: 5px; }
+        .price-value { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 1.2rem; }
 
-        /* Form e Botões */
+        /* Vídeos */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 8rem 5%; }
+        .movie-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; cursor: pointer; position: relative; transition: 0.3s; }
+        .movie-card:hover { border-color: var(--gold); }
+        .thumb { width:100%; height: 200px; background-size: cover; display: flex; align-items: center; justify-content: center; }
+        .status-badge { position: absolute; top: 10px; right: 10px; padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; background: rgba(0,0,0,0.8); }
+        .badge-locked { color: #888; border: 1px solid #444; }
+        .badge-owned { color: #00ff00; border: 1px solid #00ff00; }
+
+        .btn-gold { width: 100%; padding: 15px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; margin-top: 10px; }
         input { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 5px; }
-        .btn-gold { width: 100%; padding: 15px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 1rem; text-transform: uppercase; }
-
-        /* Área de Membros */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 7rem 5%; }
-        .movie-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; transition: 0.4s; cursor: pointer; position: relative; }
-        .movie-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .thumb { width:100%; height: 200px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; }
-        .lock-overlay { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; color: var(--gold); }
-
-        footer { padding: 4rem; text-align: center; color: #333; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <nav>
         <a href="#" class="logo">BÍBLIA SAGRADA</a>
-        <div id="navActions">
-            <button class="btn-outline" onclick="openAuth('login')">Entrar</button>
-            <button class="btn-outline" style="background:var(--gold); color:black;" onclick="openAuth('signup')">Criar Conta</button>
+        <div id="authNav">
+            <button onclick="openAuth()" style="background:var(--gold); border:none; padding:8px 20px; border-radius:5px; font-weight:bold; cursor:pointer;">Aceder</button>
         </div>
-        <div id="userInfo" style="display:none; color: var(--gold); font-weight: bold;">
-            Olá, <span id="displayUser"></span> | <a href="#" onclick="logout()" style="color:white; font-size:0.7rem; text-decoration:none;">Sair</a>
+        <div id="userNav" style="display:none; color:var(--gold);">
+            Olá, <span id="userNameDisp"></span> | <a href="#" onclick="logout()" style="color:white; font-size:0.7rem;">Sair</a>
         </div>
     </nav>
 
-    <!-- ÁREA DE MEMBROS (VÍDEOS) -->
-    <main class="grid" id="mainLibrary">
-        <!-- O Card do Filme -->
-        <div class="movie-card" onclick="playMovie('genesis_1')">
-            <div class="lock-overlay">🔒 Premium</div>
+    <main class="grid">
+        <!-- Título 1: Gênesis -->
+        <div class="movie-card" onclick="checkAccess('genesis')">
+            <div id="status-genesis" class="status-badge badge-locked">🔒 Bloqueado</div>
             <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1464802686167-b939a67e0b24?q=80&w=400')">
-                <span style="font-size: 3rem; color: var(--gold); opacity: 0.5;">▶</span>
+                <span style="font-size:3rem; color:var(--gold);">▶</span>
             </div>
-            <div style="padding: 20px;">
-                <h3 style="font-family:'Cinzel';">Gênesis: A Criação</h3>
-                <p style="color:#666; font-size:0.9rem; margin-top:5px;">Assista à superprodução cinematográfica de 20 minutos.</p>
+            <div style="padding:20px;">
+                <h3>Gênesis: A Criação</h3>
+                <p style="color:#666; font-size:0.8rem; margin-top:5px;">Preço Individual: 5,00€</p>
+            </div>
+        </div>
+
+        <!-- Título 2: Êxodo (Em breve) -->
+        <div class="movie-card" onclick="checkAccess('exodo')">
+            <div id="status-exodo" class="status-badge badge-locked">🔒 Bloqueado</div>
+            <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=400')">
+                <span style="font-size:3rem; color:var(--gold);">▶</span>
+            </div>
+            <div style="padding:20px;">
+                <h3>O Êxodo: Travessia</h3>
+                <p style="color:#666; font-size:0.8rem; margin-top:5px;">Preço Individual: 5,00€</p>
             </div>
         </div>
     </main>
 
-    <!-- MODAL AUTH (CRIAR CONTA / LOGIN) -->
+    <!-- Modal Pagamento (Pay-per-view) -->
+    <div class="modal-overlay" id="payModal">
+        <div class="modal-content">
+            <span style="float:right; cursor:pointer;" onclick="closeModal('payModal')">&times;</span>
+            <h2 style="font-family:'Cinzel'; color:var(--gold);">Escolha o seu Acesso</h2>
+            <p id="movieTarget" style="margin:10px 0; color:#888;">Título Selecionado: Gênesis</p>
+
+            <div class="price-option" onclick="payStripe(5)">
+                <h4>Acesso a este Título</h4>
+                <p style="font-size:0.8rem; color:#666;">Assistir a este curta-metragem ilimitadamente.</p>
+                <div class="price-value">5€</div>
+            </div>
+
+            <div class="price-option" style="border-color:var(--gold); background: rgba(212,175,55,0.05);" onclick="payStripe(25)">
+                <h4>Passe Total (Recomendado) ✨</h4>
+                <p style="font-size:0.8rem; color:#666;">Acesso antecipado a todos os títulos atuais e futuros.</p>
+                <div class="price-value">25€</div>
+            </div>
+            
+            <p style="font-size:0.7rem; color:#444; margin-top:15px;">Transação direta via Stripe Secure</p>
+        </div>
+    </div>
+
+    <!-- Modal Auth -->
     <div class="modal-overlay" id="authModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModals()">&times;</span>
-            <h2 id="authTitle" style="font-family:'Cinzel'; color:var(--gold); margin-bottom:20px;">Criar Conta</h2>
-            <input type="text" id="userName" placeholder="Nome Próprio">
-            <input type="email" id="userEmail" placeholder="E-mail">
-            <input type="password" id="userPass" placeholder="Palavra-passe">
-            <button class="btn-gold" onclick="handleAuth()">Confirmar</button>
-            <p id="switchAuth" style="margin-top:20px; font-size:0.9rem; cursor:pointer; color:#888;" onclick="toggleAuthMode()">Já tem conta? Aceder</p>
+            <h2 style="font-family:'Cinzel'; color:var(--gold);">Criar Conta</h2>
+            <input type="text" id="inName" placeholder="Nome Próprio">
+            <input type="email" id="inEmail" placeholder="E-mail">
+            <button class="btn-gold" onclick="doAuth()">Começar Jornada</button>
         </div>
     </div>
-
-    <!-- MODAL SUBSCREVER (PAYWALL) -->
-    <div class="modal-overlay" id="paywallModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModals()">&times;</span>
-            <div class="paywall-icon">🎬</div>
-            <div class="premium-tag">ACESSO EXCLUSIVO</div>
-            <h2 style="font-family:'Cinzel'; color:var(--gold); margin-bottom:15px;">Assista à Experiência Completa</h2>
-            <p style="color:#ccc; margin-bottom:25px; line-height:1.5;">Este conteúdo é exclusivo para subscritores. Apoie a produção de novos filmes bíblicos e tenha acesso ilimitado.</p>
-            
-            <button class="btn-gold" onclick="redirectToStripe()">Subscrever Agora</button>
-            
-            <p style="margin-top:20px; font-size:0.7rem; color:#555;">Transação segura via Stripe®</p>
-        </div>
-    </div>
-
-    <footer>
-        <p>© 2024 Bíblia Sagrada Cine-Experiência</p>
-    </footer>
 
     <script>
         const stripe = Stripe('pk_live_51SfbYaKg8IkUwtXhLZUoMJFVd6Xz3KpqImhFDORR3d0hpbiAeZrXfY4ZLFT7yq3kttY7UvqXe6N26vQhtOoDyyiT00Jqhuy6YC');
-        let isLoginMode = false;
 
-        // --- CONTROLO DE MODAIS ---
-        function openAuth(mode) {
-            isLoginMode = (mode === 'login');
-            updateAuthUI();
-            document.getElementById('authModal').style.display = 'flex';
-        }
+        let currentMovie = '';
 
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            updateAuthUI();
-        }
+        function checkAccess(movie) {
+            const user = localStorage.getItem('user_email');
+            if(!user) return openAuth();
 
-        function updateAuthUI() {
-            document.getElementById('authTitle').innerText = isLoginMode ? "Aceder" : "Criar Conta";
-            document.getElementById('userName').style.display = isLoginMode ? "none" : "block";
-            document.getElementById('switchAuth').innerText = isLoginMode ? "Ainda não tem conta? Criar" : "Já tem conta? Aceder";
-        }
+            currentMovie = movie;
+            const fullAccess = localStorage.getItem('access_all') === 'true';
+            const singleAccess = localStorage.getItem('access_' + movie) === 'true';
 
-        function closeModals() {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-        }
-
-        // --- LÓGICA DE UTILIZADOR ---
-        function handleAuth() {
-            const email = document.getElementById('userEmail').value;
-            const name = document.getElementById('userName').value;
-            if(!email) return alert("Introduza um e-mail válido.");
-            
-            localStorage.setItem('biblia_user', email);
-            localStorage.setItem('biblia_name', isLoginMode ? (localStorage.getItem('biblia_name') || 'Utilizador') : name);
-            location.reload();
-        }
-
-        function checkUser() {
-            const user = localStorage.getItem('biblia_user');
-            if(user) {
-                document.getElementById('navActions').style.display = 'none';
-                document.getElementById('userInfo').style.display = 'block';
-                document.getElementById('displayUser').innerText = localStorage.getItem('biblia_name');
-            }
-        }
-
-        // --- LÓGICA DE SUBSCRICÃO & PAYWALL ---
-        function playMovie(id) {
-            const user = localStorage.getItem('biblia_user');
-            if(!user) {
-                openAuth('signup');
-                return;
-            }
-
-            // Verifica se tem subscrição ativa (Simulação)
-            const isSubscriber = localStorage.getItem('is_premium') === 'true';
-            
-            if(!isSubscriber) {
-                document.getElementById('paywallModal').style.display = 'flex';
+            if(fullAccess || singleAccess) {
+                alert("A reproduzir " + movie + " em 4K...");
             } else {
-                alert("A carregar filme em 4K. Prepare a sua cine-experiência!");
+                document.getElementById('movieTarget').innerText = "Título: " + movie.toUpperCase();
+                document.getElementById('payModal').style.display = 'flex';
             }
         }
 
-        function redirectToStripe() {
-            // Aqui deve colocar o link do seu "Stripe Payment Link" ou a lógica de Checkout
-            alert("A redirecionar para o pagamento seguro no Stripe...");
-            // Exemplo: window.location.href = "https://buy.stripe.com/SEU_LINK_AQUI";
+        function payStripe(value) {
+            alert("A redirecionar para o Stripe para pagar " + value + "€...");
+            // Simulação: Após pagamento, o Stripe voltaria para o seu site e você ativaria:
+            // if(value === 25) localStorage.setItem('access_all', 'true');
+            // else localStorage.setItem('access_' + currentMovie, 'true');
         }
 
-        function logout() {
-            localStorage.clear();
+        function openAuth() { document.getElementById('authModal').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function doAuth() {
+            const email = document.getElementById('inEmail').value;
+            const name = document.getElementById('inName').value;
+            if(!email) return;
+            localStorage.setItem('user_email', email);
+            localStorage.setItem('user_name', name);
             location.reload();
         }
 
-        checkUser();
+        function updateUI() {
+            const user = localStorage.getItem('user_email');
+            if(user) {
+                document.getElementById('authNav').style.display = 'none';
+                document.getElementById('userNav').style.display = 'block';
+                document.getElementById('userNameDisp').innerText = localStorage.getItem('user_name');
+                
+                // Atualiza cor dos emblemas
+                ['genesis', 'exodo'].forEach(m => {
+                    if(localStorage.getItem('access_all') === 'true' || localStorage.getItem('access_'+m) === 'true') {
+                        const b = document.getElementById('status-'+m);
+                        b.innerText = "✓ Adquirido";
+                        b.className = "status-badge badge-owned";
+                    }
+                });
+            }
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+        updateUI();
     </script>
 </body>
 </html>
