@@ -9,32 +9,32 @@
     <style>
         :root { --gold: #d4af37; --bg: #050505; --card: #121212; --white: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--white); }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; }
         
         nav { padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.95); border-bottom: 1px solid #222; position: fixed; width: 100%; z-index: 1000; }
-        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.4rem; font-weight: 900; text-decoration: none; }
+        .logo { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.4rem; font-weight: 900; text-decoration: none; letter-spacing: 2px; }
         
-        /* Modais */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 8rem 5% 4rem; }
+        .movie-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; cursor: pointer; position: relative; transition: 0.4s; }
+        .movie-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .thumb { width:100%; height: 200px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; background-color: #000; }
+        .status-badge { position: absolute; top: 15px; right: 15px; padding: 6px 14px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; background: rgba(0,0,0,0.85); box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 10; }
+        .badge-locked { color: var(--gold); border: 1px solid var(--gold); }
+        .badge-owned { color: #2ecc71; border: 1px solid #2ecc71; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: #111; padding: 40px; border-radius: 15px; border: 1px solid var(--gold); width: 100%; max-width: 500px; text-align: center; }
-
-        /* Paywall */
-        .price-option { background: #1a1a1a; padding: 20px; border: 1px solid #333; border-radius: 10px; margin: 15px 0; cursor: pointer; transition: 0.3s; text-align: left; position: relative; }
-        .price-option:hover { border-color: var(--gold); background: #222; }
-        .price-option h4 { color: var(--gold); margin-bottom: 5px; }
-        .price-value { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 1.2rem; }
-
-        /* Vídeos */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 8rem 5%; }
-        .movie-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; cursor: pointer; position: relative; transition: 0.3s; }
-        .movie-card:hover { border-color: var(--gold); }
-        .thumb { width:100%; height: 200px; background-size: cover; display: flex; align-items: center; justify-content: center; }
-        .status-badge { position: absolute; top: 10px; right: 10px; padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; background: rgba(0,0,0,0.8); }
-        .badge-locked { color: #888; border: 1px solid #444; }
-        .badge-owned { color: #00ff00; border: 1px solid #00ff00; }
+        
+        .price-option { background: #1a1a1a; padding: 25px; border: 1px solid #333; border-radius: 12px; margin: 20px 0; cursor: pointer; transition: 0.3s; text-align: left; position: relative; display: block; text-decoration: none; color: white; }
+        .price-option:hover { border-color: var(--gold); background: #222; transform: scale(1.02); }
+        .price-option h4 { color: var(--gold); margin-bottom: 8px; font-family: 'Cinzel', serif; }
+        .price-option p { font-size: 0.85rem; color: #aaa; width: 75%; }
+        .price-value { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 1.4rem; color: var(--gold); }
 
         .btn-gold { width: 100%; padding: 15px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; margin-top: 10px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 5px; }
+        input { width: 100%; padding: 14px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 6px; }
+        
+        footer { padding: 4rem; text-align: center; color: #444; border-top: 1px solid #111; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -42,98 +42,94 @@
     <nav>
         <a href="#" class="logo">BÍBLIA SAGRADA</a>
         <div id="authNav">
-            <button onclick="openAuth()" style="background:var(--gold); border:none; padding:8px 20px; border-radius:5px; font-weight:bold; cursor:pointer;">Aceder</button>
+            <button onclick="openAuth()" style="background:var(--gold); border:none; padding:10px 25px; border-radius:5px; font-weight:bold; cursor:pointer;">ACEDER</button>
         </div>
-        <div id="userNav" style="display:none; color:var(--gold);">
-            Olá, <span id="userNameDisp"></span> | <a href="#" onclick="logout()" style="color:white; font-size:0.7rem;">Sair</a>
+        <div id="userNav" style="display:none; color:var(--gold); font-weight: bold;">
+            <span id="userNameDisp"></span> | <a href="#" onclick="logout()" style="color:white; font-weight:normal; font-size:0.75rem; text-decoration:none; margin-left:10px; border:1px solid #333; padding:3px 8px; border-radius:4px;">Sair</a>
         </div>
     </nav>
 
     <main class="grid">
-        <!-- Título 1: Gênesis -->
+        <!-- Título: Gênesis -->
         <div class="movie-card" onclick="checkAccess('genesis')">
-            <div id="status-genesis" class="status-badge badge-locked">🔒 Bloqueado</div>
+            <div id="status-genesis" class="status-badge badge-locked">🔒 5,00€</div>
             <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1464802686167-b939a67e0b24?q=80&w=400')">
-                <span style="font-size:3rem; color:var(--gold);">▶</span>
+                <span style="font-size:3.5rem; color:var(--gold); filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));">▶</span>
             </div>
-            <div style="padding:20px;">
-                <h3>Gênesis: A Criação</h3>
-                <p style="color:#666; font-size:0.8rem; margin-top:5px;">Preço Individual: 5,00€</p>
+            <div style="padding:22px;">
+                <h3 style="font-family:'Cinzel', serif;">Gênesis: A Criação</h3>
+                <p style="color:#666; font-size:0.85rem; margin-top:8px;">Superprodução cinematográfica de 20 minutos.</p>
             </div>
         </div>
 
-        <!-- Título 2: Êxodo (Em breve) -->
+        <!-- Título: Êxodo -->
         <div class="movie-card" onclick="checkAccess('exodo')">
-            <div id="status-exodo" class="status-badge badge-locked">🔒 Bloqueado</div>
+            <div id="status-exodo" class="status-badge badge-locked">🔒 5,00€</div>
             <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=400')">
-                <span style="font-size:3rem; color:var(--gold);">▶</span>
+                <span style="font-size:3.5rem; color:var(--gold); opacity:0.3;">▶</span>
             </div>
-            <div style="padding:20px;">
-                <h3>O Êxodo: Travessia</h3>
-                <p style="color:#666; font-size:0.8rem; margin-top:5px;">Preço Individual: 5,00€</p>
+            <div style="padding:22px;">
+                <h3 style="font-family:'Cinzel', serif;">O Êxodo: Mar Vermelho</h3>
+                <p style="color:#666; font-size:0.85rem; margin-top:8px;">Disponível em breve.</p>
             </div>
         </div>
     </main>
 
-    <!-- Modal Pagamento (Pay-per-view) -->
+    <!-- Modal de Pagamento com Links Reais -->
     <div class="modal-overlay" id="payModal">
         <div class="modal-content">
-            <span style="float:right; cursor:pointer;" onclick="closeModal('payModal')">&times;</span>
-            <h2 style="font-family:'Cinzel'; color:var(--gold);">Escolha o seu Acesso</h2>
-            <p id="movieTarget" style="margin:10px 0; color:#888;">Título Selecionado: Gênesis</p>
+            <span style="float:right; cursor:pointer; font-size:1.5rem;" onclick="closeModal('payModal')">&times;</span>
+            <h2 style="font-family:'Cinzel'; color:var(--gold); margin-bottom:10px;">Adquirir Acesso</h2>
+            <p id="movieNameLabel" style="color:#888; font-weight: 600; text-transform: uppercase; font-size: 0.9rem;">Escolha o seu Passe</p>
 
-            <div class="price-option" onclick="payStripe(5)">
-                <h4>Acesso a este Título</h4>
-                <p style="font-size:0.8rem; color:#666;">Assistir a este curta-metragem ilimitadamente.</p>
+            <!-- Link Original de 5 Euros (Título Individual) -->
+            <a href="https://buy.stripe.com/3cIaEYb0ZeBubQk91edMI00" id="linkIndividual" class="price-option">
+                <h4>Este Título Individual</h4>
+                <p>Acesso vitalício apenas ao filme selecionado.</p>
                 <div class="price-value">5€</div>
-            </div>
+            </a>
 
-            <div class="price-option" style="border-color:var(--gold); background: rgba(212,175,55,0.05);" onclick="payStripe(25)">
-                <h4>Passe Total (Recomendado) ✨</h4>
-                <p style="font-size:0.8rem; color:#666;">Acesso antecipado a todos os títulos atuais e futuros.</p>
+            <!-- Link Original de 25 Euros (Passe Total) -->
+            <a href="https://buy.stripe.com/8x23cw9WVale2fK6T6dMI02" class="price-option" style="border-color:var(--gold); background: rgba(212,175,55,0.05);">
+                <h4>Passe Cinema Total ✨</h4>
+                <p>Desbloqueie todos os títulos atuais e futuros do estúdio.</p>
                 <div class="price-value">25€</div>
-            </div>
+            </a>
             
-            <p style="font-size:0.7rem; color:#444; margin-top:15px;">Transação direta via Stripe Secure</p>
+            <p style="font-size:0.75rem; color:#555; margin-top:20px;">Pagamento Seguro processado por Stripe®</p>
         </div>
     </div>
 
-    <!-- Modal Auth -->
+    <!-- Modal Criar Conta -->
     <div class="modal-overlay" id="authModal">
         <div class="modal-content">
-            <h2 style="font-family:'Cinzel'; color:var(--gold);">Criar Conta</h2>
+            <h2 style="font-family:'Cinzel'; color:var(--gold); margin-bottom:20px;">Entrar no Estúdio</h2>
             <input type="text" id="inName" placeholder="Nome Próprio">
-            <input type="email" id="inEmail" placeholder="E-mail">
-            <button class="btn-gold" onclick="doAuth()">Começar Jornada</button>
+            <input type="email" id="inEmail" placeholder="Seu e-mail">
+            <button class="btn-gold" onclick="doAuth()">CRIAR CONTA</button>
+            <p style="margin-top:15px; font-size:0.8rem; color:#555; cursor:pointer;" onclick="closeModal('authModal')">Cancelar</p>
         </div>
     </div>
 
+    <footer>
+        <p>© 2024 Bíblia Sagrada Digital • Produção gabrielafelix3960-ops</p>
+    </footer>
+
     <script>
-        const stripe = Stripe('pk_live_51SfbYaKg8IkUwtXhLZUoMJFVd6Xz3KpqImhFDORR3d0hpbiAeZrXfY4ZLFT7yq3kttY7UvqXe6N26vQhtOoDyyiT00Jqhuy6YC');
-
-        let currentMovie = '';
-
         function checkAccess(movie) {
             const user = localStorage.getItem('user_email');
             if(!user) return openAuth();
 
-            currentMovie = movie;
-            const fullAccess = localStorage.getItem('access_all') === 'true';
-            const singleAccess = localStorage.getItem('access_' + movie) === 'true';
+            const hasFull = localStorage.getItem('access_all') === 'true';
+            const hasSingle = localStorage.getItem('access_' + movie) === 'true';
 
-            if(fullAccess || singleAccess) {
-                alert("A reproduzir " + movie + " em 4K...");
+            if(hasFull || hasSingle) {
+                alert("A carregar filme em Ultra HD... Prepare-se para a experiência.");
+                // O vídeo de Gênesis seria carregado aqui
             } else {
-                document.getElementById('movieTarget').innerText = "Título: " + movie.toUpperCase();
+                document.getElementById('movieNameLabel').innerText = "Título: " + movie.toUpperCase();
                 document.getElementById('payModal').style.display = 'flex';
             }
-        }
-
-        function payStripe(value) {
-            alert("A redirecionar para o Stripe para pagar " + value + "€...");
-            // Simulação: Após pagamento, o Stripe voltaria para o seu site e você ativaria:
-            // if(value === 25) localStorage.setItem('access_all', 'true');
-            // else localStorage.setItem('access_' + currentMovie, 'true');
         }
 
         function openAuth() { document.getElementById('authModal').style.display = 'flex'; }
@@ -142,7 +138,7 @@
         function doAuth() {
             const email = document.getElementById('inEmail').value;
             const name = document.getElementById('inName').value;
-            if(!email) return;
+            if(!email || !name) return alert("Por favor, preencha o Nome e E-mail para continuar.");
             localStorage.setItem('user_email', email);
             localStorage.setItem('user_name', name);
             location.reload();
@@ -155,12 +151,24 @@
                 document.getElementById('userNav').style.display = 'block';
                 document.getElementById('userNameDisp').innerText = localStorage.getItem('user_name');
                 
-                // Atualiza cor dos emblemas
+                // Sistema Automático de Reconhecimento de Pagamento
+                const urlParams = new URLSearchParams(window.location.search);
+                if(urlParams.get('payment') === 'success') {
+                    const item = urlParams.get('item');
+                    if(item === 'all') localStorage.setItem('access_all', 'true');
+                    else if(item) localStorage.setItem('access_' + item, 'true');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+
+                // Atualizar Badges baseados no acesso
                 ['genesis', 'exodo'].forEach(m => {
-                    if(localStorage.getItem('access_all') === 'true' || localStorage.getItem('access_'+m) === 'true') {
+                    const isPurchased = localStorage.getItem('access_all') === 'true' || localStorage.getItem('access_'+m) === 'true';
+                    if(isPurchased) {
                         const b = document.getElementById('status-'+m);
-                        b.innerText = "✓ Adquirido";
-                        b.className = "status-badge badge-owned";
+                        if(b) {
+                            b.innerText = "✓ Adquirido";
+                            b.className = "status-badge badge-owned";
+                        }
                     }
                 });
             }
